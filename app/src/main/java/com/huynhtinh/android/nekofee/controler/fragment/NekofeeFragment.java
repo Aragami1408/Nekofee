@@ -101,11 +101,13 @@ public class NekofeeFragment extends Fragment {
                     } else {
                         if (!isGpsOn()) {
                             showAlert(ALERT_GPS);
-                        } else if (!isNetworkConnected()) {
-                            showAlert(ALERT_NETWORK);
-                        } else {
-                            sendCurrentLocation();
+                            return;
                         }
+                        if (!isNetworkConnected()) {
+                            showAlert(ALERT_NETWORK);
+                            return;
+                        }
+                        sendCurrentLocation();
                     }
                 }
             }
@@ -207,8 +209,7 @@ public class NekofeeFragment extends Fragment {
             @Override
             public void onLocationChanged(Location location) {
 
-                Log.i(TAG, "Current location: lat=" + location.getLatitude() +
-                        ", Lon=" + location.getLongitude());
+                Log.i(TAG, "Current location: lat=" + location.getLatitude() + ", lon=" + location.getLongitude());
 
                 Intent intent = ListCafeActivity.newIntent(getActivity(), location);
                 startActivity(intent);

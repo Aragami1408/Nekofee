@@ -5,6 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.huynhtinh.android.nekofee.R;
 
 /**
  * Created by TINH HUYNH on 5/24/2017.
@@ -30,11 +35,15 @@ public class ListCafeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            return;
-        }
         mCurrentLocation = getArguments().getParcelable(KEY_CURRENT_LOCATION);
         Log.i(TAG, "Received location: lat=" + mCurrentLocation.getLatitude()
-                + " ,Lon=" + mCurrentLocation.getLongitude());
+                + " ,lon=" + mCurrentLocation.getLongitude());
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_list_cafe, container, false);
+        return view;
     }
 }
