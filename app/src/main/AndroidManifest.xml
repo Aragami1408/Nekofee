@@ -22,8 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".controler.activity.ListCafeActivity">
-
+        <activity android:name=".controler.activity.ListCafeActivity"
+                  android:parentActivityName=".controler.activity.NekofeeActivity">
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"

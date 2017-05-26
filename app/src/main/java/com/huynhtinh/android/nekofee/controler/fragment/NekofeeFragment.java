@@ -33,6 +33,8 @@ import com.google.android.gms.location.places.Places;
 import com.huynhtinh.android.nekofee.R;
 import com.huynhtinh.android.nekofee.controler.activity.ListCafeActivity;
 
+import utils.ConnectionChecker;
+
 /**
  * Created by TINH HUYNH on 5/22/2017.
  */
@@ -99,15 +101,16 @@ public class NekofeeFragment extends Fragment {
                     if (radiusNumber < 1 || radiusNumber > 50000) {
                         mRadiusEditText.setError("Radius must be in range of [1, 50000]");
                     } else {
-                        if (!isGpsOn()) {
+                        ConnectionChecker connectionChecker = new ConnectionChecker(getActivity());
+                        if (!connectionChecker.isGpsOn()) {
                             showAlert(ALERT_GPS);
                             return;
                         }
-                        if (!isNetworkConnected()) {
+                        if (!connectionChecker.isNetworkConnected()) {
                             showAlert(ALERT_NETWORK);
                             return;
                         }
-                        sendCurrentLocation();
+                        sendCurrentLocation(radiusNumber);
                     }
                 }
             }
@@ -130,22 +133,6 @@ public class NekofeeFragment extends Fragment {
         if (mClient != null && mClient.isConnecting()) {
             mClient.disconnect();
         }
-    }
-
-    private boolean isGpsOn() {
-        LocationManager locationManager =
-                (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    ;
-
-    private boolean isNetworkConnected() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     private void showAlert(int alertCode) {
@@ -193,7 +180,7 @@ public class NekofeeFragment extends Fragment {
         alertDialog.show();
     }
 
-    private void sendCurrentLocation() {
+    private void sendCurrentLocation(final int radius) {
         LocationRequest request = new LocationRequest();
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         request.setNumUpdates(1);
@@ -211,7 +198,7 @@ public class NekofeeFragment extends Fragment {
 
                 Log.i(TAG, "Current location: lat=" + location.getLatitude() + ", lon=" + location.getLongitude());
 
-                Intent intent = ListCafeActivity.newIntent(getActivity(), location);
+                Intent intent = ListCafeActivity.newIntent(getActivity(), location, radius);
                 startActivity(intent);
             }
         });

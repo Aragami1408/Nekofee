@@ -14,19 +14,22 @@ import com.huynhtinh.android.nekofee.controler.fragment.ListCafeFragment;
 public class ListCafeActivity extends SingleFragmentActivity {
 
     private static final String EXTRA_CURRENT_LOCATION = "currentLocationExtra";
+    private static final String EXTRA_RADIUS = "radiusExtra";
+
+    public static Intent newIntent(Context packageContext, Location currentLocation, int radius){
+        Intent intent = new Intent(packageContext, ListCafeActivity.class);
+        intent.putExtra(EXTRA_CURRENT_LOCATION, currentLocation);
+        intent.putExtra(EXTRA_RADIUS, radius);
+        return intent;
+    }
 
     @Override
     protected Fragment createFragment() {
         Location location = getIntent().getParcelableExtra(EXTRA_CURRENT_LOCATION);
-        if(location == null){
+        int radius = getIntent().getIntExtra(EXTRA_RADIUS, 0);
+        if(location == null || radius == 0){
             return null;
         }
-        return ListCafeFragment.newInstance(location);
-    }
-
-    public static Intent newIntent(Context packageContext, Location currentLocation){
-        Intent intent = new Intent(packageContext, ListCafeActivity.class);
-        intent.putExtra(EXTRA_CURRENT_LOCATION, currentLocation);
-        return intent;
+        return ListCafeFragment.newInstance(location, radius);
     }
 }

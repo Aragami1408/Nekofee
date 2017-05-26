@@ -6,6 +6,15 @@
     android:alpha="0.8"
     android:background="@drawable/background_dark_blur_crop">
 
+    <TextView
+        android:id="@+id/empty_cafe_text_view"
+        style="@style/BackgroundTextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No cafe is found :("
+        android:textSize="30sp"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_cafe_recycle_view"
         android:layout_width="match_parent"

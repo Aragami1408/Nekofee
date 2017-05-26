@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@drawable/background_dark_blur_crop">
+              android:background="@drawable/background_dark_blur_crop"
+              android:orientation="vertical">
 
     <TextView
+        style="@style/BackgroundTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/top_background_text_view"
-        android:layout_marginTop="150dp"
         android:layout_marginBottom="5dp"
-        android:textAlignment="center"
-        style="@style/BackgroundTextTheme"/>
+        android:layout_marginTop="150dp"
+        android:text="@string/top_background_text_view"
+        android:textAlignment="center"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/radius_edit_text"
             style="@style/BackgroundTextTheme"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:maxLength="5"
             android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/colorWhite"
             android:ems="10"
-            android:text="@string/radius_hint"
             android:gravity="center"
             android:inputType="number"
+            android:maxLength="5"
+            android:text="@string/radius_hint"
             android:textAlignment="center"
-            android:textCursorDrawable="@null"
-            android:backgroundTint="@color/colorWhiteText"
-            android:textColorHint="@color/colorHint"/>
+            android:textColorHint="@color/colorHint"
+            android:textCursorDrawable="@null"/>
 
         <TextView
             android:id="@+id/textView"
@@ -49,17 +49,17 @@
     </LinearLayout>
 
     <Button
-        style="@style/Base.Widget.AppCompat.Button"
         android:id="@+id/find_button"
-        android:background="@drawable/find_button"
+        style="@style/Base.Widget.AppCompat.Button"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textStyle="normal"
+        android:background="@drawable/find_button"
         android:fontFamily="sans-serif"
-        android:textColor="@color/colorWhiteText"
         android:padding="15dp"
+        android:text="@string/find_button_text"
+        android:textColor="@color/colorWhite"
         android:textSize="15sp"
-        android:text="@string/find_button_text"/>
+        android:textStyle="normal"/>
 
 </LinearLayout>
