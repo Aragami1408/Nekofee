@@ -1,14 +1,10 @@
 package com.huynhtinh.android.nekofee.controler.fragment;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -22,18 +18,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Places;
 import com.huynhtinh.android.nekofee.R;
 import com.huynhtinh.android.nekofee.controler.activity.ListCafeActivity;
 
 import utils.ConnectionChecker;
+import utils.SharedPreference;
 
 /**
  * Created by TINH HUYNH on 5/22/2017.
@@ -88,6 +83,10 @@ public class NekofeeFragment extends Fragment {
         View view = inflater.inflate(R.layout.nekofee_fragment, container, false);
 
         mRadiusEditText = (EditText) view.findViewById(R.id.radius_edit_text);
+        int savedRadius = SharedPreference.getRadius(getActivity());
+        if(savedRadius != 0){
+            mRadiusEditText.setText(savedRadius + "");
+        }
 
         mFindButton = (Button) view.findViewById(R.id.find_button);
         mFindButton.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +109,7 @@ public class NekofeeFragment extends Fragment {
                             showAlert(ALERT_NETWORK);
                             return;
                         }
+                        SharedPreference.saveRadius(getActivity(), radiusNumber);
                         sendCurrentLocation(radiusNumber);
                     }
                 }
@@ -203,4 +203,5 @@ public class NekofeeFragment extends Fragment {
             }
         });
     }
+
 }

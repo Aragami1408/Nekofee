@@ -19,6 +19,8 @@ public class Cafe {
     private String mMainPhotoRef;
     private String mOpenNow;
     private String mPhoneNumber;
+    private String mDistance;
+    private String mDuration;
     private ArrayList<String> mWeekDay;
     private ArrayList<String> mPhotoRefs;
     private ArrayList<Review> mReviews;
@@ -117,5 +119,21 @@ public class Cafe {
 
     public void setReviews(ArrayList<Review> reviews) {
         mReviews = reviews;
+    }
+
+    public String getDistance() {
+        return mDistance;
+    }
+
+    public void setDistance(String distance) {
+        mDistance = distance;
+    }
+
+    public String getDuration() {
+        return mDuration;
+    }
+
+    public void setDuration(String duration) {
+        mDuration = duration;
     }
 }

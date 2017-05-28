@@ -26,20 +26,24 @@ import model.Cafe;
 
 public class DataFetcher {
     private static final String TAG = "DataFetcher";
-    private static final String API_KEY = "AIzaSyCXm1oYyeBWPSK1lpss15mcv0vSDnxMy2E";
-    private static final Uri ENDPOINT = Uri.parse("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
-            .buildUpon()
-            .appendQueryParameter("type", "cafe")
-            .appendQueryParameter("key", API_KEY)
-            .build();
+    private static final String PLACES_API_KEY = "AIzaSyCXm1oYyeBWPSK1lpss15mcv0vSDnxMy2E";
+    private static final String MAP_API_KEY = "AIzaSyCqwZQoYD7H2XOxc1qzJg4EMEjNE8ScLmQ";
     private static String sNextPageToken;
+    private Location mCurrentLocation;
+    private int mRadius;
+
+    public DataFetcher() {
+    }
 
     public static String getNextPageToken() {
         return sNextPageToken;
     }
 
     public List<Cafe> fetchNearbyCafe(Location location, int radius, boolean isMore) {
-        Uri uri = ENDPOINT.buildUpon()
+        Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
+                .buildUpon()
+                .appendQueryParameter("type", "cafe")
+                .appendQueryParameter("key", PLACES_API_KEY)
                 .appendQueryParameter("location", location.getLatitude() + "," + location.getLongitude())
                 .appendQueryParameter("radius", String.valueOf(radius))
                 .build();
@@ -49,7 +53,8 @@ public class DataFetcher {
                     .appendQueryParameter("pagetoken", sNextPageToken).build();
         }
         Log.i(TAG, "Uri fetchNearbyCafe: " + uri.toString());
-
+        mCurrentLocation = location;
+        mRadius = radius;
         return downloadCafeList(uri.toString());
     }
 
@@ -136,21 +141,66 @@ public class DataFetcher {
             }
 
             cafe.setAddress(result.getString("vicinity"));
-            cafes.add(cafe);
+
+            Location cafeLocation = new Location("");
+            cafeLocation.setLatitude(cafe.getLatitude());
+            cafeLocation.setLongitude(cafe.getLongitude());
+
+            String[] durationAndDistance = getCafeDistanceAndDuration(mCurrentLocation, cafeLocation);
+            if(durationAndDistance!= null) {
+                cafe.setDuration(durationAndDistance[1]);
+                cafe.setDistance(durationAndDistance[0]);
+                cafes.add(cafe);
+            }
+
         }
 
         return cafes;
     }
 
-    public String getPhotoUrl(String photoRef){
-        Uri uri =  Uri.parse("https://maps.googleapis.com/maps/api/place/photo")
+    public String getPhotoUrl(String photoRef) {
+        Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/place/photo")
                 .buildUpon()
                 .appendQueryParameter("maxwidth", 300 + "")
                 .appendQueryParameter("maxheight", 300 + "")
                 .appendQueryParameter("photoreference", photoRef)
-                .appendQueryParameter("key", API_KEY)
+                .appendQueryParameter("key", PLACES_API_KEY)
                 .build();
         return uri.toString();
+    }
+
+    private String[] getCafeDistanceAndDuration(Location src, Location des) {
+        String[] data = null;
+        try {
+            Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/distancematrix/json")
+                    .buildUpon()
+                    .appendQueryParameter("origins", src.getLatitude() + "," + src.getLongitude())
+                    .appendQueryParameter("destinations", des.getLatitude() + "," + des.getLongitude())
+                    .appendQueryParameter("key", MAP_API_KEY)
+                    .build();
+            String jsonString = getUrlString(uri.toString());
+            Log.i(TAG, "getCafeDurationAndDistance URL: " + uri.toString());
+            Log.i(TAG, "Receive Json String for Duration and Distance:" + jsonString);
+            JSONObject root = new JSONObject(jsonString);
+
+            JSONArray rows = root.getJSONArray("rows");
+
+            JSONArray elements = rows.getJSONObject(0).getJSONArray("elements");
+            JSONObject element = elements.getJSONObject(0);
+            if((element.getJSONObject("distance").getInt("value")) > mRadius + 100){
+                return null;
+            }
+            data = new String[2];
+            data[0] = element.getJSONObject("distance").getString("text");
+            data[1] = element.getJSONObject("duration").getString("text");
+
+        } catch (JSONException e) {
+            Log.i(TAG, "Fail to parse json", e);
+        } catch (IOException e) {
+            Log.i(TAG, "Fail to download data", e);
+        }
+
+        return data;
     }
 
 }

@@ -4,4 +4,5 @@
     <string name="top_background_text_view">I want to find nearby café\n within</string>
     <string name="find_button_text">Find now!</string>
     <string name="rating">Rating:</string>
+    <string name="no_cafe_text">No cafe is found :(</string>
 </resources>

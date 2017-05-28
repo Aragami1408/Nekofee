@@ -131,6 +131,7 @@ public class ListCafeFragment extends Fragment {
         private RatingBar mRatingBar;
         private TextView mRateIndexTextView;
         private TextView mOpenNowTextView;
+        private TextView mDistanceTextView;
 
         public CafeHolder(View itemView) {
             super(itemView);
@@ -140,6 +141,7 @@ public class ListCafeFragment extends Fragment {
             mRatingBar = (RatingBar) itemView.findViewById(R.id.cafe_rating_bar);
             mRateIndexTextView = (TextView) itemView.findViewById(R.id.rate_index_text_view);
             mOpenNowTextView = (TextView) itemView.findViewById(R.id.open_now_text_view);
+            mDistanceTextView = (TextView) itemView.findViewById(R.id.distance_text_view);
         }
 
         public void bindCafe(Cafe cafe) {
@@ -156,6 +158,7 @@ public class ListCafeFragment extends Fragment {
                     .load(url)
                     .placeholder(R.drawable.no_image)
                     .into(mImageView);
+            mDistanceTextView.setText(mCafe.getDistance());
         }
     }
 
@@ -189,12 +192,13 @@ public class ListCafeFragment extends Fragment {
     }
 
     private class FindNearbyCafeTask extends AsyncTask<Object, Void, List<Cafe>> {
-        ProgressDialog mProgressDialog = new ProgressDialog(getActivity());
+        ProgressDialog mProgressDialog;
         private boolean mMore;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mProgressDialog = new ProgressDialog(getActivity());
             mProgressDialog.setMessage("Loading data...");
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             mProgressDialog.setIndeterminate(true);
