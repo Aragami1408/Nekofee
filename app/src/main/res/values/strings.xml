@@ -5,4 +5,9 @@
     <string name="find_button_text">Find now!</string>
     <string name="rating">Rating:</string>
     <string name="no_cafe_text">No cafe is found :(</string>
+    <string name="duration">%1$s driving</string>
+    <string name="contact">Contact</string>
+    <string name="photos">Photos</string>
+    <string name="working_days">Working days</string>
+    <string name="review">Review</string>
 </resources>

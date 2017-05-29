@@ -25,6 +25,10 @@
         <activity android:name=".controler.activity.ListCafeActivity"
                   android:parentActivityName=".controler.activity.NekofeeActivity">
         </activity>
+        <activity android:name=".controler.activity.CafeActivity"
+                  android:parentActivityName=".controler.activity.ListCafeActivity">
+
+        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCXm1oYyeBWPSK1lpss15mcv0vSDnxMy2E"/>

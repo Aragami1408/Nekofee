@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.huynhtinh.android.nekofee.R;
 import com.huynhtinh.android.nekofee.controler.fragment.NekofeeFragment;
 
@@ -21,7 +20,7 @@ public class NekofeeActivity extends SingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.container_activity);
+        setContentView(R.layout.activity_container);
 
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int result = googleApiAvailability.isGooglePlayServicesAvailable(this);

@@ -1,6 +1,7 @@
 package com.huynhtinh.android.nekofee.controler.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.huynhtinh.android.nekofee.R;
+import com.huynhtinh.android.nekofee.controler.activity.CafeActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -123,7 +125,7 @@ public class ListCafeFragment extends Fragment {
         }
     }
 
-    private class CafeHolder extends RecyclerView.ViewHolder {
+    private class CafeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView mImageView;
         private Cafe mCafe;
         private TextView mNameTextView;
@@ -135,6 +137,7 @@ public class ListCafeFragment extends Fragment {
 
         public CafeHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             mImageView = (ImageView) itemView.findViewById(R.id.cafe_photo_image_view);
             mNameTextView = (TextView) itemView.findViewById(R.id.cafe_name_text_view);
             mAddressTextView = (TextView) itemView.findViewById(R.id.cafe_address_text_view);
@@ -159,6 +162,11 @@ public class ListCafeFragment extends Fragment {
                     .placeholder(R.drawable.no_image)
                     .into(mImageView);
             mDistanceTextView.setText(mCafe.getDistance());
+        }
+
+        @Override
+        public void onClick(View v) {
+           startActivity(new Intent(getActivity(), CafeActivity.class));
         }
     }
 

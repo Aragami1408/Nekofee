@@ -27,9 +27,6 @@ public class ListCafeActivity extends SingleFragmentActivity {
     protected Fragment createFragment() {
         Location location = getIntent().getParcelableExtra(EXTRA_CURRENT_LOCATION);
         int radius = getIntent().getIntExtra(EXTRA_RADIUS, 0);
-        if(location == null || radius == 0){
-            return null;
-        }
         return ListCafeFragment.newInstance(location, radius);
     }
 }

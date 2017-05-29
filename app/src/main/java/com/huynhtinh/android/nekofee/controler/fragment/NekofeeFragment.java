@@ -80,7 +80,7 @@ public class NekofeeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.nekofee_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_nekofee, container, false);
 
         mRadiusEditText = (EditText) view.findViewById(R.id.radius_edit_text);
         int savedRadius = SharedPreference.getRadius(getActivity());
