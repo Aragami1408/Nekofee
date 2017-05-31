@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.huynhtinh.android.nekofee.R;
 
 /**
@@ -13,6 +15,8 @@ import com.huynhtinh.android.nekofee.R;
  */
 
 public abstract class SingleFragmentActivity extends AppCompatActivity {
+
+
 
     abstract protected Fragment createFragment();
 
@@ -28,5 +32,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
                     .add(R.id.container_activity, fragment)
                     .commit();
         }
+
+
     }
 }

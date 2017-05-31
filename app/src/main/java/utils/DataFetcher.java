@@ -19,6 +19,7 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 import model.Cafe;
+import model.Review;
 
 /**
  * Created by TINH HUYNH on 5/25/2017.
@@ -29,8 +30,8 @@ public class DataFetcher {
     private static final String PLACES_API_KEY = "AIzaSyCXm1oYyeBWPSK1lpss15mcv0vSDnxMy2E";
     private static final String MAP_API_KEY = "AIzaSyCqwZQoYD7H2XOxc1qzJg4EMEjNE8ScLmQ";
     private static String sNextPageToken;
-    private Location mCurrentLocation;
-    private int mRadius;
+//    private Location mCurrentLocation;
+//    private int mRadius;
 
     public DataFetcher() {
     }
@@ -53,8 +54,8 @@ public class DataFetcher {
                     .appendQueryParameter("pagetoken", sNextPageToken).build();
         }
         Log.i(TAG, "Uri fetchNearbyCafe: " + uri.toString());
-        mCurrentLocation = location;
-        mRadius = radius;
+//        mCurrentLocation = location;
+//        mRadius = radius;
         return downloadCafeList(uri.toString());
     }
 
@@ -142,65 +143,133 @@ public class DataFetcher {
 
             cafe.setAddress(result.getString("vicinity"));
 
-            Location cafeLocation = new Location("");
-            cafeLocation.setLatitude(cafe.getLatitude());
-            cafeLocation.setLongitude(cafe.getLongitude());
+            cafes.add(cafe);
 
-            String[] durationAndDistance = getCafeDistanceAndDuration(mCurrentLocation, cafeLocation);
-            if(durationAndDistance!= null) {
-                cafe.setDuration(durationAndDistance[1]);
-                cafe.setDistance(durationAndDistance[0]);
-                cafes.add(cafe);
-            }
+//            Location cafeLocation = new Location("Destination location");
+//            cafeLocation.setLatitude(cafe.getLatitude());
+//            cafeLocation.setLongitude(cafe.getLongitude());
 
         }
 
         return cafes;
     }
 
-    public String getPhotoUrl(String photoRef) {
+    public String getPhotoUrl(String photoRef, int size) {
+        return getPhotoUrl(photoRef, size, size);
+    }
+
+    public String getPhotoUrl(String photoRef, int width, int height) {
         Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/place/photo")
                 .buildUpon()
-                .appendQueryParameter("maxwidth", 300 + "")
-                .appendQueryParameter("maxheight", 300 + "")
+                .appendQueryParameter("maxwidth", width + "")
+                .appendQueryParameter("maxheight", height + "")
                 .appendQueryParameter("photoreference", photoRef)
                 .appendQueryParameter("key", PLACES_API_KEY)
                 .build();
         return uri.toString();
     }
 
-    private String[] getCafeDistanceAndDuration(Location src, Location des) {
-        String[] data = null;
+    public void getCafeDetail(Cafe cafe) {
+        Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/place/details/json")
+                .buildUpon()
+                .appendQueryParameter("placeid", cafe.getCafeId())
+                .appendQueryParameter("key", PLACES_API_KEY)
+                .build();
+
+        String jsonString;
         try {
-            Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/distancematrix/json")
-                    .buildUpon()
-                    .appendQueryParameter("origins", src.getLatitude() + "," + src.getLongitude())
-                    .appendQueryParameter("destinations", des.getLatitude() + "," + des.getLongitude())
-                    .appendQueryParameter("key", MAP_API_KEY)
-                    .build();
-            String jsonString = getUrlString(uri.toString());
-            Log.i(TAG, "getCafeDurationAndDistance URL: " + uri.toString());
-            Log.i(TAG, "Receive Json String for Duration and Distance:" + jsonString);
+            jsonString = getUrlString(uri.toString());
             JSONObject root = new JSONObject(jsonString);
+            Log.i(TAG, "Received detail JSON: " + jsonString);
+            Log.i(TAG, "Url getCafeDetail: " + uri.toString());
+            JSONObject result = root.getJSONObject("result");
 
-            JSONArray rows = root.getJSONArray("rows");
+            cafe.setPhoneNumber(result.optString("formatted_phone_number"));
 
-            JSONArray elements = rows.getJSONObject(0).getJSONArray("elements");
-            JSONObject element = elements.getJSONObject(0);
-            if((element.getJSONObject("distance").getInt("value")) > mRadius + 100){
-                return null;
+            JSONObject openingHours = result.optJSONObject("opening_hours");
+
+            if (openingHours != null) {
+                JSONArray weekdayText = openingHours.optJSONArray("weekday_text");
+                if (weekdayText != null) {
+                    ArrayList<String> workingDays = new ArrayList<>();
+                    for (int i = 0; i < weekdayText.length(); i++) {
+                        workingDays.add(weekdayText.getString(i));
+                    }
+                    cafe.setWorkingDays(workingDays);
+                }
             }
-            data = new String[2];
-            data[0] = element.getJSONObject("distance").getString("text");
-            data[1] = element.getJSONObject("duration").getString("text");
 
-        } catch (JSONException e) {
-            Log.i(TAG, "Fail to parse json", e);
+            JSONArray photos = result.optJSONArray("photos");
+
+            if (photos != null) {
+                ArrayList<String> photoRefs = new ArrayList<>();
+                for (int i = 0; i < photos.length(); i++) {
+                    photoRefs.add(photos.getJSONObject(i).getString("photo_reference"));
+                }
+                cafe.setPhotoRefs(photoRefs);
+            }
+
+            JSONArray reviews = result.optJSONArray("reviews");
+
+            if (reviews != null) {
+                ArrayList<Review> cafeReviews = new ArrayList<>();
+                for (int i = 0; i < reviews.length(); i++) {
+                    JSONObject review = reviews.getJSONObject(i);
+                    Review cafeReview = new Review();
+                    cafeReview.setAuthor(review.getString("author_name"));
+                    cafeReview.setRating((float) review.getDouble("rating"));
+                    if (Float.isNaN(cafeReview.getRating())) {
+                        cafe.setRating(0f);
+                    }
+
+                    cafeReview.setTime(review.getString("relative_time_description"));
+
+                    cafeReview.setText(review.getString("text"));
+
+                    cafeReviews.add(cafeReview);
+                }
+
+                cafe.setReviews(cafeReviews);
+            }
+
+            cafe.setWebsite(result.optString("website"));
+
         } catch (IOException e) {
             Log.i(TAG, "Fail to download data", e);
+        } catch (JSONException e) {
+            Log.i(TAG, "Fail to parse JSON", e);
         }
 
-        return data;
     }
+
+
+//    private void getCafeDistanceAndDuration(Cafe cafe, Location src, Location des) {
+//
+//        try {
+//            Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/distancematrix/json")
+//                    .buildUpon()
+//                    .appendQueryParameter("origins", src.getLatitude() + "," + src.getLongitude())
+//                    .appendQueryParameter("destinations", des.getLatitude() + "," + des.getLongitude())
+//                    .appendQueryParameter("key", MAP_API_KEY)
+//                    .build();
+//            String jsonString = getUrlString(uri.toString());
+//            Log.i(TAG, "getCafeDurationAndDistance URL: " + uri.toString());
+//            Log.i(TAG, "Receive Json String for Duration and Distance:" + jsonString);
+//            JSONObject root = new JSONObject(jsonString);
+//
+//            JSONArray rows = root.getJSONArray("rows");
+//
+//            JSONArray elements = rows.getJSONObject(0).getJSONArray("elements");
+//            JSONObject element = elements.getJSONObject(0);
+//
+//
+//        } catch (JSONException e) {
+//            Log.i(TAG, "Fail to parse json", e);
+//        } catch (IOException e) {
+//            Log.i(TAG, "Fail to download data", e);
+//        }
+//
+//
+//    }
 
 }

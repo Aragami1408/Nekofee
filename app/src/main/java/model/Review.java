@@ -10,7 +10,7 @@ public class Review {
     private String mAuthor;
     private String text;
     private Float mRating;
-    private Date mDate;
+    private String mTime;
 
     public String getAuthor() {
         return mAuthor;
@@ -36,11 +36,11 @@ public class Review {
         mRating = rating;
     }
 
-    public Date getDate() {
-        return mDate;
+    public String getTime() {
+        return mTime;
     }
 
-    public void setDate(Date date) {
-        mDate = date;
+    public void setTime(String time) {
+        mTime = time;
     }
 }

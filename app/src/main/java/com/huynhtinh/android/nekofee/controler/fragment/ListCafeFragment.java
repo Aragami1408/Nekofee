@@ -2,6 +2,7 @@ package com.huynhtinh.android.nekofee.controler.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,10 +19,13 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.huynhtinh.android.nekofee.R;
 import com.huynhtinh.android.nekofee.controler.activity.CafeActivity;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Cafe;
@@ -36,12 +40,14 @@ public class ListCafeFragment extends Fragment {
 
     private static final String KEY_CURRENT_LOCATION = "currentLocation";
     private static final String KEY_RADIUS = "radiusKey";
+    private static final String KEY_CAFES = "cafesKey";
 
     private Location mCurrentLocation;
     private int mRadius;
     private RecyclerView mRecyclerView;
     private CafeAdapter mCafeAdapter;
     private TextView mEmptyCafeTextView;
+    private ArrayList<Cafe> mCafes;
 
     public static ListCafeFragment newInstance(Location currentLocation, int radius) {
 
@@ -57,11 +63,20 @@ public class ListCafeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCurrentLocation = getArguments().getParcelable(KEY_CURRENT_LOCATION);
-        mRadius = getArguments().getInt(KEY_RADIUS);
+
+        if (savedInstanceState != null) {
+            mCurrentLocation = savedInstanceState.getParcelable(KEY_CURRENT_LOCATION);
+            mRadius = savedInstanceState.getInt(KEY_RADIUS);
+            mCafes = (ArrayList<Cafe>) savedInstanceState.getSerializable(KEY_CAFES);
+        } else {
+            mCurrentLocation = getArguments().getParcelable(KEY_CURRENT_LOCATION);
+            mRadius = getArguments().getInt(KEY_RADIUS);
+        }
         Log.i(TAG, "Received location: lat=" + mCurrentLocation.getLatitude()
                 + " ,lon=" + mCurrentLocation.getLongitude());
         Log.i(TAG, "Received radius: " + mRadius);
+
+
     }
 
     @Nullable
@@ -99,9 +114,21 @@ public class ListCafeFragment extends Fragment {
                 }
             });
         }
+        if (savedInstanceState != null && mCafes != null) {
+            updateUI(mCafes);
+        } else {
+            loadMoreCafe(false);
+        }
 
-        loadMoreCafe(false);
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_CURRENT_LOCATION, mCurrentLocation);
+        outState.putInt(KEY_RADIUS, mRadius);
+        outState.putSerializable(KEY_CAFES, (Serializable) mCafeAdapter.getCafes());
+        super.onSaveInstanceState(outState);
     }
 
     private void loadMoreCafe(boolean isMore) {
@@ -109,14 +136,14 @@ public class ListCafeFragment extends Fragment {
     }
 
     private void updateUI(List<Cafe> cafes) {
-        if (cafes.isEmpty()) {
-            mEmptyCafeTextView.setVisibility(View.VISIBLE);
-            return;
-        }
 
         mEmptyCafeTextView.setVisibility(View.GONE);
 
         if (mRecyclerView.getAdapter() == null) {
+            if (cafes.isEmpty()) {
+                mEmptyCafeTextView.setVisibility(View.VISIBLE);
+                return;
+            }
             mCafeAdapter = new CafeAdapter(cafes);
             mRecyclerView.setAdapter(mCafeAdapter);
         } else {
@@ -133,7 +160,6 @@ public class ListCafeFragment extends Fragment {
         private RatingBar mRatingBar;
         private TextView mRateIndexTextView;
         private TextView mOpenNowTextView;
-        private TextView mDistanceTextView;
 
         public CafeHolder(View itemView) {
             super(itemView);
@@ -144,7 +170,6 @@ public class ListCafeFragment extends Fragment {
             mRatingBar = (RatingBar) itemView.findViewById(R.id.cafe_rating_bar);
             mRateIndexTextView = (TextView) itemView.findViewById(R.id.rate_index_text_view);
             mOpenNowTextView = (TextView) itemView.findViewById(R.id.open_now_text_view);
-            mDistanceTextView = (TextView) itemView.findViewById(R.id.distance_text_view);
         }
 
         public void bindCafe(Cafe cafe) {
@@ -156,17 +181,18 @@ public class ListCafeFragment extends Fragment {
             if (mCafe.getOpenNow() != null) {
                 mOpenNowTextView.setText(mCafe.getOpenNow());
             }
-            String url = new DataFetcher().getPhotoUrl(mCafe.getMainPhotoRef());
+            int size = Resources.getSystem().getDisplayMetrics().widthPixels;
+            String url = new DataFetcher().getPhotoUrl(mCafe.getMainPhotoRef(), size / 3);
             Picasso.with(getActivity())
                     .load(url)
                     .placeholder(R.drawable.no_image)
                     .into(mImageView);
-            mDistanceTextView.setText(mCafe.getDistance());
         }
 
         @Override
         public void onClick(View v) {
-           startActivity(new Intent(getActivity(), CafeActivity.class));
+            Intent intent = CafeActivity.newIntent(getActivity(), mCafe);
+            startActivity(intent);
         }
     }
 

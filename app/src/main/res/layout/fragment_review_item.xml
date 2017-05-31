@@ -2,48 +2,29 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?android:attr/listSeparatorTextViewStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="5dp"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
-
-        <TextView
-            android:id="@+id/author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            tools:text="Author Name"/>
-
-        <RatingBar
-            android:id="@+id/review_rating_bar"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
-            android:layout_marginTop="2dp"
-            android:rating="5"/>
-
-        <TextView
-            android:id="@+id/review_rate_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:fontFamily="sans-serif"
-            android:textSize="17sp"
-            tools:text="(5)"/>
-    </LinearLayout>
 
     <TextView
-        android:id="@+id/review_text_view"
+        android:id="@+id/author_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        tools:text="Author Name"/>
+
+
+    <TextView
+        android:id="@+id/review_text_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
+        android:layout_margin="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:fontFamily="sans-serif"
@@ -51,14 +32,41 @@
         android:textStyle="italic"
         tools:text='"This cafe is awesome"'/>
 
-    <TextView
-        android:id="@+id/review_date_text_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:fontFamily="sans-serif"
-        android:gravity="right"
-        android:textSize="15sp"
-        tools:text="May 27, 2017"/>
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <RatingBar
+            android:id="@+id/review_rating_bar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="2dp"
+            android:rating="5"/>
+
+        <TextView
+            android:id="@+id/review_rating_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:fontFamily="sans-serif"
+            android:textSize="17sp"
+            tools:text="(5)"/>
+
+        <TextView
+            android:id="@+id/review_date_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="20dp"
+            android:fontFamily="sans-serif"
+            android:gravity="right"
+            android:textSize="15sp"
+            tools:text="May 27, 2017"/>
+
+    </LinearLayout>
 
 </LinearLayout>

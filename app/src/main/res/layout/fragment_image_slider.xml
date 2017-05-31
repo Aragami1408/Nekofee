@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/photo_linear_layout"
+              android:id="@+id/photos_linear_layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical">
@@ -16,13 +16,14 @@
     <com.daimajia.slider.library.SliderLayout
         android:id="@+id/image_slider"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"/>
 
-    <com.daimajia.slider.library.Indicators.PagerIndicator
-        android:id="@+id/custom_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"/>
+    <!--<com.daimajia.slider.library.Indicators.PagerIndicator-->
+        <!--android:id="@+id/custom_indicator"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"/>-->
 
 </LinearLayout>

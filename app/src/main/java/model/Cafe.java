@@ -1,12 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by TINH HUYNH on 5/25/2017.
  */
 
-public class Cafe {
+public class Cafe implements Serializable {
     public static final String OPEN_NOW = "Open now";
     public static final String CLOSED = "Closed";
 
@@ -19,11 +20,13 @@ public class Cafe {
     private String mMainPhotoRef;
     private String mOpenNow;
     private String mPhoneNumber;
+    private String mWebsite;
     private String mDistance;
     private String mDuration;
-    private ArrayList<String> mWeekDay;
+    private ArrayList<String> mWorkingDays;
     private ArrayList<String> mPhotoRefs;
     private ArrayList<Review> mReviews;
+
 
     public String getName() {
         return name;
@@ -97,13 +100,6 @@ public class Cafe {
         mPhoneNumber = phoneNumber;
     }
 
-    public ArrayList<String> getWeekDay() {
-        return mWeekDay;
-    }
-
-    public void setWeekDay(ArrayList<String> weekDay) {
-        mWeekDay = weekDay;
-    }
 
     public ArrayList<String> getPhotoRefs() {
         return mPhotoRefs;
@@ -135,5 +131,21 @@ public class Cafe {
 
     public void setDuration(String duration) {
         mDuration = duration;
+    }
+
+    public ArrayList<String> getWorkingDays() {
+        return mWorkingDays;
+    }
+
+    public void setWorkingDays(ArrayList<String> workingDays) {
+        mWorkingDays = workingDays;
+    }
+
+    public String getWebsite() {
+        return mWebsite;
+    }
+
+    public void setWebsite(String website) {
+        mWebsite = website;
     }
 }

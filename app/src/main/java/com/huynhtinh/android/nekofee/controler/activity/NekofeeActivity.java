@@ -1,5 +1,6 @@
 package com.huynhtinh.android.nekofee.controler.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -18,15 +19,22 @@ public class NekofeeActivity extends SingleFragmentActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_container);
-
+    protected void onResume() {
+        super.onResume();
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int result = googleApiAvailability.isGooglePlayServicesAvailable(this);
-        if(result != ConnectionResult.SUCCESS){
-            if(googleApiAvailability.isUserResolvableError(result)){
-                googleApiAvailability.getErrorDialog(this, result, REQUEST_CODE).show();
+
+        int errorCode = googleApiAvailability.isGooglePlayServicesAvailable(this);
+
+        if(errorCode != ConnectionResult.SUCCESS){
+            if(googleApiAvailability.isUserResolvableError(errorCode)){
+                googleApiAvailability.getErrorDialog(this, errorCode,
+                        REQUEST_CODE, new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                //leave if services are unavailable
+                                finish();
+                            }
+                        }).show();
             }
         }
     }

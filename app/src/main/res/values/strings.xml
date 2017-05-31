@@ -9,5 +9,6 @@
     <string name="contact">Contact</string>
     <string name="photos">Photos</string>
     <string name="working_days">Working days</string>
-    <string name="review">Review</string>
+    <string name="review">Reviews</string>
+    <string name="action_settings">Settings</string>
 </resources>
