@@ -42,7 +42,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 onBackPressed();
-                Toast.makeText(this, "Home pressed", Toast.LENGTH_LONG).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
