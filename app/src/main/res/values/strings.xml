@@ -11,4 +11,6 @@
     <string name="working_days">Working days</string>
     <string name="review">Reviews</string>
     <string name="action_settings">Settings</string>
+    <string name="change_mode">Change to %1$s mode</string>
+    <string name="price_level">Price Level</string>
 </resources>

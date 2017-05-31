@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.huynhtinh.android.nekofee.R;
+import com.huynhtinh.android.nekofee.controler.fragment.WebFragment;
 
 /**
  * Created by TINH HUYNH on 5/21/2017.
@@ -42,7 +43,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 onBackPressed();
-                Toast.makeText(this, "Home pressed", Toast.LENGTH_LONG).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);

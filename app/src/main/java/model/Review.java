@@ -12,6 +12,7 @@ public class Review implements Serializable {
     private String text;
     private Float mRating;
     private String mTime;
+    private String mProfilePhotoUrl;
 
     public String getAuthor() {
         return mAuthor;
@@ -43,5 +44,13 @@ public class Review implements Serializable {
 
     public void setTime(String time) {
         mTime = time;
+    }
+
+    public String getProfilePhotoUrl() {
+        return mProfilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        mProfilePhotoUrl = profilePhotoUrl;
     }
 }

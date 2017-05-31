@@ -1,13 +1,12 @@
 package com.huynhtinh.android.nekofee.controler.activity;
 
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.huynhtinh.android.nekofee.R;
 import com.huynhtinh.android.nekofee.controler.fragment.NekofeeFragment;
+import com.huynhtinh.android.nekofee.controler.fragment.WebFragment;
 
 public class NekofeeActivity extends SingleFragmentActivity {
 

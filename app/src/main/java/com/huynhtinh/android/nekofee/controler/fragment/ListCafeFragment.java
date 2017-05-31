@@ -191,7 +191,7 @@ public class ListCafeFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Intent intent = CafeActivity.newIntent(getActivity(), mCafe);
+            Intent intent = CafeActivity.newIntent(getActivity(), mCafe, mCurrentLocation);
             startActivity(intent);
         }
     }

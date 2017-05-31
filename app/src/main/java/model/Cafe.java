@@ -11,6 +11,12 @@ public class Cafe implements Serializable {
     public static final String OPEN_NOW = "Open now";
     public static final String CLOSED = "Closed";
 
+    public static final String PRICE_LEVEL_0 = "Free";
+    public static final String PRICE_LEVEL_1 = "Inexpensive";
+    public static final String PRICE_LEVEL_2 = "Moderate";
+    public static final String PRICE_LEVEL_3 = "Expensive";
+    public static final String PRICE_LEVEL_4 = "Very Expensive";
+
     private String name;
     private String address;
     private float mRating;
@@ -19,6 +25,7 @@ public class Cafe implements Serializable {
     private String mCafeId;
     private String mMainPhotoRef;
     private String mOpenNow;
+    private int mPriceLevel;
     private String mPhoneNumber;
     private String mWebsite;
     private String mDistance;
@@ -147,5 +154,13 @@ public class Cafe implements Serializable {
 
     public void setWebsite(String website) {
         mWebsite = website;
+    }
+
+    public int getPriceLevel() {
+        return mPriceLevel;
+    }
+
+    public void setPriceLevel(int priceLevel) {
+        mPriceLevel = priceLevel;
     }
 }

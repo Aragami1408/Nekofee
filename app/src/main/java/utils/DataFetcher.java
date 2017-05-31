@@ -4,6 +4,8 @@ import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,12 +16,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import model.Cafe;
 import model.Review;
+import model.RouteInfo;
 
 /**
  * Created by TINH HUYNH on 5/25/2017.
@@ -28,7 +32,8 @@ import model.Review;
 public class DataFetcher {
     private static final String TAG = "DataFetcher";
     private static final String PLACES_API_KEY = "AIzaSyCXm1oYyeBWPSK1lpss15mcv0vSDnxMy2E";
-    private static final String MAP_API_KEY = "AIzaSyCqwZQoYD7H2XOxc1qzJg4EMEjNE8ScLmQ";
+    private static final String MAPS_DISTANCE_API_KEY = "AIzaSyCqwZQoYD7H2XOxc1qzJg4EMEjNE8ScLmQ";
+    private static final String MAPS_DIRECTION_API_KEY = "AIzaSyCqwZQoYD7H2XOxc1qzJg4EMEjNE8ScLmQ";
     private static String sNextPageToken;
 //    private Location mCurrentLocation;
 //    private int mRadius;
@@ -200,7 +205,6 @@ public class DataFetcher {
             }
 
             JSONArray photos = result.optJSONArray("photos");
-
             if (photos != null) {
                 ArrayList<String> photoRefs = new ArrayList<>();
                 for (int i = 0; i < photos.length(); i++) {
@@ -209,8 +213,9 @@ public class DataFetcher {
                 cafe.setPhotoRefs(photoRefs);
             }
 
-            JSONArray reviews = result.optJSONArray("reviews");
+            cafe.setPriceLevel(result.optInt("price_level", -1));
 
+            JSONArray reviews = result.optJSONArray("reviews");
             if (reviews != null) {
                 ArrayList<Review> cafeReviews = new ArrayList<>();
                 for (int i = 0; i < reviews.length(); i++) {
@@ -221,12 +226,12 @@ public class DataFetcher {
                     if (Float.isNaN(cafeReview.getRating())) {
                         cafe.setRating(0f);
                     }
-
                     cafeReview.setTime(review.getString("relative_time_description"));
-
                     cafeReview.setText(review.getString("text"));
+                    cafeReview.setProfilePhotoUrl(review.getString("profile_photo_url"));
 
                     cafeReviews.add(cafeReview);
+
                 }
 
                 cafe.setReviews(cafeReviews);
@@ -243,33 +248,105 @@ public class DataFetcher {
     }
 
 
-//    private void getCafeDistanceAndDuration(Cafe cafe, Location src, Location des) {
-//
-//        try {
-//            Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/distancematrix/json")
-//                    .buildUpon()
-//                    .appendQueryParameter("origins", src.getLatitude() + "," + src.getLongitude())
-//                    .appendQueryParameter("destinations", des.getLatitude() + "," + des.getLongitude())
-//                    .appendQueryParameter("key", MAP_API_KEY)
-//                    .build();
-//            String jsonString = getUrlString(uri.toString());
-//            Log.i(TAG, "getCafeDurationAndDistance URL: " + uri.toString());
-//            Log.i(TAG, "Receive Json String for Duration and Distance:" + jsonString);
-//            JSONObject root = new JSONObject(jsonString);
-//
-//            JSONArray rows = root.getJSONArray("rows");
-//
-//            JSONArray elements = rows.getJSONObject(0).getJSONArray("elements");
-//            JSONObject element = elements.getJSONObject(0);
-//
-//
-//        } catch (JSONException e) {
-//            Log.i(TAG, "Fail to parse json", e);
-//        } catch (IOException e) {
-//            Log.i(TAG, "Fail to download data", e);
-//        }
-//
-//
-//    }
+    public RouteInfo getRoutes(LatLng current, LatLng cafe, boolean isDrivingMode) {
+        Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
+                .buildUpon()
+                .appendQueryParameter("origin", current.latitude + "," + current.longitude)
+                .appendQueryParameter("destination", cafe.latitude + "," + cafe.longitude)
+                .appendQueryParameter("units", "metric")
+                .appendQueryParameter("key", MAPS_DIRECTION_API_KEY)
+                .build();
+        if (!isDrivingMode) {
+            uri = uri.buildUpon().appendQueryParameter("mode", "walking").build();
+        }
+        JSONArray jRoutes;
+        JSONArray jLegs;
+        JSONArray jSteps;
+        RouteInfo routeInfo = new RouteInfo();
+
+        List<List<HashMap<String, String>>> routes = new ArrayList<>();
+
+        try {
+            String jsonString = getUrlString(uri.toString());
+            JSONObject root = new JSONObject(jsonString);
+            Log.i(TAG, "Uri for getRoutes: " + uri.toString());
+            Log.i(TAG, "Receive routes JSON: " + jsonString);
+            jRoutes = root.getJSONArray("routes");
+
+            /** Traversing all routes */
+            for (int i = 0; i < jRoutes.length(); i++) {
+                jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
+                List<HashMap<String, String>> path = new ArrayList<>();
+
+                /** Traversing all legs */
+                for (int j = 0; j < jLegs.length(); j++) {
+                    jSteps = ((JSONObject) jLegs.get(j)).getJSONArray("steps");
+
+                    /** Traversing all steps */
+                    for (int k = 0; k < jSteps.length(); k++) {
+                        String polyline = "";
+                        polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(k)).get("polyline")).get("points");
+                        List<LatLng> list = decodePoly(polyline);
+
+                        /** Traversing all points */
+                        for (int l = 0; l < list.size(); l++) {
+                            HashMap<String, String> hm = new HashMap<>();
+                            hm.put("lat", Double.toString((list.get(l)).latitude));
+                            hm.put("lng", Double.toString((list.get(l)).longitude));
+                            path.add(hm);
+                        }
+                    }
+                    routes.add(path);
+                }
+            }
+            routeInfo.setRoutes(routes);
+            jLegs = (jRoutes.getJSONObject(0)).getJSONArray("legs");
+            routeInfo.setDuration(jLegs.getJSONObject(0).getJSONObject("duration").getString("text"));
+            routeInfo.setDistance(jLegs.getJSONObject(0).getJSONObject("distance").getString("text"));
+
+
+        } catch (IOException e) {
+            Log.i(TAG, "Fail to download routes", e);
+        } catch (JSONException e) {
+            Log.i(TAG, "Fail to parse routes", e);
+        }
+        return routeInfo;
+    }
+
+    // Courtesy : http://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
+    private List<LatLng> decodePoly(String encoded) {
+
+        List<LatLng> poly = new ArrayList<>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng((((double) lat / 1E5)),
+                    (((double) lng / 1E5)));
+            poly.add(p);
+        }
+
+        return poly;
+    }
+
 
 }

@@ -37,10 +37,15 @@
             android:name=".controler.activity.CafeActivity"
             android:parentActivityName=".controler.activity.ListCafeActivity">
         </activity>
+        <activity android:name=".controler.activity.MapActivity"
+            android:parentActivityName=".controler.activity.CafeActivity">
 
+        </activity>
+        <activity android:name=".controler.activity.WebActivity"
+            android:parentActivityName=".controler.activity.CafeActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCXm1oYyeBWPSK1lpss15mcv0vSDnxMy2E"/>
+            android:value="AIzaSyDDMGgdIdbvTZE_2_vOuT8ktqsZ6zt9afU"/>
 
     </application>
 
