@@ -10,17 +10,20 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.huynhtinh.android.nekofee.R;
 import com.squareup.picasso.Picasso;
 
@@ -34,8 +37,9 @@ import utils.DataFetcher;
  * Created by TINH HUYNH on 5/29/2017.
  */
 
-public class CafeFragment extends Fragment {
+public class CafeFragment extends SupportMapFragment {
     private static final String ARG_CAFE = "cafeArg";
+    private static final String KEY_CAFE = "cafeKey";
 
     private ImageView mCafeImageView;
     private TextView mNameTextView;
@@ -81,8 +85,15 @@ public class CafeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCafe = (Cafe) getArguments().getSerializable(ARG_CAFE);
+        if(savedInstanceState != null){
+            mCafe = (Cafe) savedInstanceState.getSerializable(KEY_CAFE);
+        }else {
+            mCafe = (Cafe) getArguments().getSerializable(ARG_CAFE);
+
+        }
     }
+
+
 
     @Nullable
     @Override
@@ -113,6 +124,18 @@ public class CafeFragment extends Fragment {
         new GetCafeDetailTask().execute();
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(KEY_CAFE, mCafe);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mSliderLayout.stopAutoCycle();;
     }
 
     private void updateUI() {
@@ -152,8 +175,6 @@ public class CafeFragment extends Fragment {
             height = (int) convertDpToPixel(250);
             for (String ref : mPhotoRefs) {
                 TextSliderView textSliderView = new TextSliderView(getActivity());
-                // initialize a SliderLayout
-
                 textSliderView
                         .image(mDataFetcher.getPhotoUrl(ref, width, height))
                         .setScaleType(BaseSliderView.ScaleType.CenterCrop);
@@ -164,7 +185,7 @@ public class CafeFragment extends Fragment {
             mSliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
             mSliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
             mSliderLayout.setCustomAnimation(new DescriptionAnimation());
-            mSliderLayout.setDuration(4000);
+            mSliderLayout.stopAutoCycle();
         }
 
         // working days

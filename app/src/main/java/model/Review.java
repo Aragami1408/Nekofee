@@ -1,12 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by TINH HUYNH on 5/25/2017.
  */
 
-public class Review {
+public class Review implements Serializable {
     private String mAuthor;
     private String text;
     private Float mRating;
