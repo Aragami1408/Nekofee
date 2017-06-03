@@ -14,5 +14,5 @@ Libraries, APIs used for building app:
   - Get route route, distance, duration: Google Maps Directions API https://developers.google.com/maps/documentation/directions/
     
 + Libraries: 
-  -Load and cache image: Picasso https://github.com/square/picasso
-  -Image Slider: Daimajia's Image Slider https://github.com/daimajia/AndroidImageSlider
+  - Load and cache image: Picasso https://github.com/square/picasso
+  - Image Slider: Daimajia's Image Slider https://github.com/daimajia/AndroidImageSlider
