@@ -328,10 +328,12 @@ public class CafeFragment extends Fragment {
             mRatingTextView.setText("(" + review.getRating() + ")");
             mTextTextView.setText(review.getText());
             mTimeTextView.setText(review.getTime());
-            Picasso.with(getActivity())
-                    .load(review.getProfilePhotoUrl())
-                    .noPlaceholder()
-                    .into(mProfilePhotoImageView);
+            if(!review.getProfilePhotoUrl().isEmpty()) {
+                Picasso.with(getActivity())
+                        .load(review.getProfilePhotoUrl())
+                        .noPlaceholder()
+                        .into(mProfilePhotoImageView);
+            }
         }
     }
 

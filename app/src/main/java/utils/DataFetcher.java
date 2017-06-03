@@ -228,7 +228,7 @@ public class DataFetcher {
                     }
                     cafeReview.setTime(review.getString("relative_time_description"));
                     cafeReview.setText(review.getString("text"));
-                    cafeReview.setProfilePhotoUrl(review.getString("profile_photo_url"));
+                    cafeReview.setProfilePhotoUrl(review.optString("profile_photo_url"));
 
                     cafeReviews.add(cafeReview);
 
