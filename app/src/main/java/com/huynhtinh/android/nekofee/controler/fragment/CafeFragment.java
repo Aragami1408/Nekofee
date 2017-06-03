@@ -229,10 +229,10 @@ public class CafeFragment extends Fragment {
         }
 
         //price level
-        if(mCafe.getPriceLevel() == -1){
+        if (mCafe.getPriceLevel() == -1) {
             mPriceLevelLinearLayout.setVisibility(View.GONE);
-        }else{
-            switch (mCafe.getPriceLevel()){
+        } else {
+            switch (mCafe.getPriceLevel()) {
                 case 0:
                     mPriceLevelTextView.setText(Cafe.PRICE_LEVEL_0);
                     break;
@@ -328,12 +328,11 @@ public class CafeFragment extends Fragment {
             mRatingTextView.setText("(" + review.getRating() + ")");
             mTextTextView.setText(review.getText());
             mTimeTextView.setText(review.getTime());
-            if(!review.getProfilePhotoUrl().isEmpty()) {
+            if (!review.getProfilePhotoUrl().isEmpty())
                 Picasso.with(getActivity())
                         .load(review.getProfilePhotoUrl())
                         .noPlaceholder()
                         .into(mProfilePhotoImageView);
-            }
         }
     }
 
