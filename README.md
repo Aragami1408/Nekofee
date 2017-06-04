@@ -3,7 +3,7 @@
 Nekofee is my first Android project for practicing my Android skills. 
 
 Nekofee allows user to find nearby coffee shops within a paricular radius provided by him/her. In addition, it provides following features:
-+ View café detail: Name, address, phone number, website, photos, working days, reviews,...
++ View café detail: Name, address, rating, phone number, website, photos, working days, reviews,...
 + Support user contacting café through: phone number or website,..
 + Display route, distance, duration between user's location and café's on two transit modes: Driving and Walking
 
