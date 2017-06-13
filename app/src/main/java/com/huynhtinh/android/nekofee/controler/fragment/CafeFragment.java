@@ -326,7 +326,11 @@ public class CafeFragment extends Fragment {
             mAuthorTextView.setText(review.getAuthor());
             mRatingBar.setRating(review.getRating());
             mRatingTextView.setText("(" + review.getRating() + ")");
-            mTextTextView.setText(review.getText());
+            if (review.getText().isEmpty()) {
+                mTextTextView.setVisibility(View.GONE);
+            } else {
+                mTextTextView.setText(review.getText());
+            }
             mTimeTextView.setText(review.getTime());
             if (!review.getProfilePhotoUrl().isEmpty())
                 Picasso.with(getActivity())

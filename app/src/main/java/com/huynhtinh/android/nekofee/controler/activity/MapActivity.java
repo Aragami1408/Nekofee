@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -68,6 +69,14 @@ public class MapActivity extends AppCompatActivity {
         mDurationButton = (Button) findViewById(R.id.duration_button);
         mModeButton = (Button) findViewById(R.id.mode_button);
 
+        mModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                invalidateOptionsMenu();
+                updateUI();
+            }
+        });
+
         mDrivingMode = true;
 
         Intent intent = getIntent();
@@ -83,6 +92,7 @@ public class MapActivity extends AppCompatActivity {
                 updateUI();
             }
         });
+
     }
 
 
