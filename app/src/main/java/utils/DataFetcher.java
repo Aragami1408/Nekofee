@@ -32,11 +32,9 @@ import model.RouteInfo;
 public class DataFetcher {
     private static final String TAG = "DataFetcher";
     private static final String PLACES_API_KEY = "YOUR_API_KEY";
-    private static final String MAPS_DISTANCE_API_KEY = "YOUR_API_KEY";
     private static final String MAPS_DIRECTION_API_KEY = "YOUR_API_KEY";
     private static String sNextPageToken;
-//    private Location mCurrentLocation;
-//    private int mRadius;
+
 
     public DataFetcher() {
     }

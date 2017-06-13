@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -89,12 +88,13 @@ public class MapActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_map, menu);
         MenuItem changModeItem = menu.findItem(R.id.change_transit_mode_item);
         mDrivingMode = !mDrivingMode;
         String driveMode = mDrivingMode ? DRIVING_MODE : WALKING_MODE;
         changModeItem.setTitle(getResources().getString(R.string.change_mode, driveMode));
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
