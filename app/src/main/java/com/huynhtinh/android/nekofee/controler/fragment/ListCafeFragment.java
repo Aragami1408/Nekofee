@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.huynhtinh.android.nekofee.R;
 import com.huynhtinh.android.nekofee.controler.activity.CafeActivity;
 import com.squareup.picasso.Picasso;
@@ -177,7 +176,7 @@ public class ListCafeFragment extends Fragment {
             mNameTextView.setText(mCafe.getName());
             mAddressTextView.setText(mCafe.getAddress());
             mRatingBar.setRating(mCafe.getRating());
-            mRateIndexTextView.setText("(" + mCafe.getRating() + ")");
+            mRateIndexTextView.setText(getResources().getString(R.string.rating_index, mCafe.getRating() + ""));
             if (mCafe.getOpenNow() != null) {
                 mOpenNowTextView.setText(mCafe.getOpenNow());
             }

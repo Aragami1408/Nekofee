@@ -1,7 +1,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Created by TINH HUYNH on 5/25/2017.
@@ -27,7 +26,7 @@ public class Review implements Serializable {
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.text = "\"" + text + "\"";
     }
 
     public Float getRating() {
