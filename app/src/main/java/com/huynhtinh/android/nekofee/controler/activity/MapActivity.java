@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import model.RouteInfo;
-import utils.DataFetcher;
+import data.DataFetcher;
 
 /**
  * Created by TINH HUYNH on 6/1/2017.
@@ -160,7 +160,7 @@ public class MapActivity extends AppCompatActivity {
         protected RouteInfo doInBackground(LatLng... params) {
             LatLng current = params[0];
             LatLng cafe = params[1];
-            return new DataFetcher().getRoutes(current, cafe, mDrivingMode);
+            return new DataFetcher().fetchRoutes(current, cafe, mDrivingMode);
         }
 
         @Override

@@ -37,7 +37,7 @@ import java.util.List;
 
 import model.Cafe;
 import model.Review;
-import utils.DataFetcher;
+import data.DataFetcher;
 
 /**
  * Created by TINH HUYNH on 5/29/2017.
@@ -373,7 +373,7 @@ public class CafeFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-            mDataFetcher.getCafeDetail(mCafe);
+            mDataFetcher.fetchCafeDetail(mCafe);
             return null;
         }
 

@@ -1,4 +1,4 @@
-package utils;
+package data;
 
 import android.location.Location;
 import android.net.Uri;
@@ -57,9 +57,8 @@ public class DataFetcher {
                     .appendQueryParameter("pagetoken", sNextPageToken).build();
         }
         Log.i(TAG, "Uri fetchNearbyCafe: " + uri.toString());
-//        mCurrentLocation = location;
-//        mRadius = radius;
-        return downloadCafeList(uri.toString());
+
+        return fetchCafeList(uri.toString());
     }
 
     private byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -96,7 +95,7 @@ public class DataFetcher {
         return new String(getUrlBytes(urlSpec));
     }
 
-    private List<Cafe> downloadCafeList(String urlSpec) {
+    private List<Cafe> fetchCafeList(String urlSpec) {
         List<Cafe> cafes = new ArrayList<>();
         try {
             String jsonString = getUrlString(urlSpec);
@@ -147,11 +146,6 @@ public class DataFetcher {
             cafe.setAddress(result.getString("vicinity"));
 
             cafes.add(cafe);
-
-//            Location cafeLocation = new Location("Destination location");
-//            cafeLocation.setLatitude(cafe.getLatitude());
-//            cafeLocation.setLongitude(cafe.getLongitude());
-
         }
 
         return cafes;
@@ -172,7 +166,7 @@ public class DataFetcher {
         return uri.toString();
     }
 
-    public void getCafeDetail(Cafe cafe) {
+    public void fetchCafeDetail(Cafe cafe) {
         Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/place/details/json")
                 .buildUpon()
                 .appendQueryParameter("placeid", cafe.getCafeId())
@@ -182,61 +176,7 @@ public class DataFetcher {
         String jsonString;
         try {
             jsonString = getUrlString(uri.toString());
-            JSONObject root = new JSONObject(jsonString);
-            Log.i(TAG, "Received detail JSON: " + jsonString);
-            Log.i(TAG, "Url getCafeDetail: " + uri.toString());
-            JSONObject result = root.getJSONObject("result");
-
-            cafe.setPhoneNumber(result.optString("formatted_phone_number"));
-
-            JSONObject openingHours = result.optJSONObject("opening_hours");
-
-            if (openingHours != null) {
-                JSONArray weekdayText = openingHours.optJSONArray("weekday_text");
-                if (weekdayText != null) {
-                    ArrayList<String> workingDays = new ArrayList<>();
-                    for (int i = 0; i < weekdayText.length(); i++) {
-                        workingDays.add(weekdayText.getString(i));
-                    }
-                    cafe.setWorkingDays(workingDays);
-                }
-            }
-
-            JSONArray photos = result.optJSONArray("photos");
-            if (photos != null) {
-                ArrayList<String> photoRefs = new ArrayList<>();
-                for (int i = 0; i < photos.length(); i++) {
-                    photoRefs.add(photos.getJSONObject(i).getString("photo_reference"));
-                }
-                cafe.setPhotoRefs(photoRefs);
-            }
-
-            cafe.setPriceLevel(result.optInt("price_level", -1));
-
-            JSONArray reviews = result.optJSONArray("reviews");
-            if (reviews != null) {
-                ArrayList<Review> cafeReviews = new ArrayList<>();
-                for (int i = 0; i < reviews.length(); i++) {
-                    JSONObject review = reviews.getJSONObject(i);
-                    Review cafeReview = new Review();
-                    cafeReview.setAuthor(review.getString("author_name"));
-                    cafeReview.setRating((float) review.getDouble("rating"));
-                    if (Float.isNaN(cafeReview.getRating())) {
-                        cafe.setRating(0f);
-                    }
-                    cafeReview.setTime(review.getString("relative_time_description"));
-                    cafeReview.setText(review.getString("text"));
-                    cafeReview.setProfilePhotoUrl(review.optString("profile_photo_url"));
-
-                    cafeReviews.add(cafeReview);
-
-                }
-
-                cafe.setReviews(cafeReviews);
-            }
-
-            cafe.setWebsite(result.optString("website"));
-
+            parseCafeDetails(cafe, jsonString);
         } catch (IOException e) {
             Log.i(TAG, "Fail to download data", e);
         } catch (JSONException e) {
@@ -245,8 +185,63 @@ public class DataFetcher {
 
     }
 
+    private void parseCafeDetails(Cafe cafe, String jsonString) throws JSONException {
+        JSONObject root = new JSONObject(jsonString);
+        JSONObject result = root.getJSONObject("result");
 
-    public RouteInfo getRoutes(LatLng current, LatLng cafe, boolean isDrivingMode) {
+        cafe.setPhoneNumber(result.optString("formatted_phone_number"));
+
+        JSONObject openingHours = result.optJSONObject("opening_hours");
+
+        if (openingHours != null) {
+            JSONArray weekdayText = openingHours.optJSONArray("weekday_text");
+            if (weekdayText != null) {
+                ArrayList<String> workingDays = new ArrayList<>();
+                for (int i = 0; i < weekdayText.length(); i++) {
+                    workingDays.add(weekdayText.getString(i));
+                }
+                cafe.setWorkingDays(workingDays);
+            }
+        }
+
+        JSONArray photos = result.optJSONArray("photos");
+        if (photos != null) {
+            ArrayList<String> photoRefs = new ArrayList<>();
+            for (int i = 0; i < photos.length(); i++) {
+                photoRefs.add(photos.getJSONObject(i).getString("photo_reference"));
+            }
+            cafe.setPhotoRefs(photoRefs);
+        }
+
+        cafe.setPriceLevel(result.optInt("price_level", -1));
+
+        JSONArray reviews = result.optJSONArray("reviews");
+        if (reviews != null) {
+            ArrayList<Review> cafeReviews = new ArrayList<>();
+            for (int i = 0; i < reviews.length(); i++) {
+                JSONObject review = reviews.getJSONObject(i);
+                Review cafeReview = new Review();
+                cafeReview.setAuthor(review.getString("author_name"));
+                cafeReview.setRating((float) review.getDouble("rating"));
+                if (Float.isNaN(cafeReview.getRating())) {
+                    cafe.setRating(0f);
+                }
+                cafeReview.setTime(review.getString("relative_time_description"));
+                cafeReview.setText(review.getString("text"));
+                cafeReview.setProfilePhotoUrl(review.optString("profile_photo_url"));
+
+                cafeReviews.add(cafeReview);
+
+            }
+
+            cafe.setReviews(cafeReviews);
+        }
+
+        cafe.setWebsite(result.optString("website"));
+    }
+
+
+    public RouteInfo fetchRoutes(LatLng current, LatLng cafe, boolean isDrivingMode) {
         Uri uri = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
                 .buildUpon()
                 .appendQueryParameter("origin", current.latitude + "," + current.longitude)
@@ -257,57 +252,61 @@ public class DataFetcher {
         if (!isDrivingMode) {
             uri = uri.buildUpon().appendQueryParameter("mode", "walking").build();
         }
-        JSONArray jRoutes;
-        JSONArray jLegs;
-        JSONArray jSteps;
-        RouteInfo routeInfo = new RouteInfo();
 
-        List<List<HashMap<String, String>>> routes = new ArrayList<>();
+        RouteInfo routeInfo = null;
 
         try {
             String jsonString = getUrlString(uri.toString());
-            JSONObject root = new JSONObject(jsonString);
-            Log.i(TAG, "Uri for getRoutes: " + uri.toString());
-            Log.i(TAG, "Receive routes JSON: " + jsonString);
-            jRoutes = root.getJSONArray("routes");
-
-            /** Traversing all routes */
-            for (int i = 0; i < jRoutes.length(); i++) {
-                jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
-                List<HashMap<String, String>> path = new ArrayList<>();
-
-                /** Traversing all legs */
-                for (int j = 0; j < jLegs.length(); j++) {
-                    jSteps = ((JSONObject) jLegs.get(j)).getJSONArray("steps");
-
-                    /** Traversing all steps */
-                    for (int k = 0; k < jSteps.length(); k++) {
-                        String polyline = "";
-                        polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(k)).get("polyline")).get("points");
-                        List<LatLng> list = decodePoly(polyline);
-
-                        /** Traversing all points */
-                        for (int l = 0; l < list.size(); l++) {
-                            HashMap<String, String> hm = new HashMap<>();
-                            hm.put("lat", Double.toString((list.get(l)).latitude));
-                            hm.put("lng", Double.toString((list.get(l)).longitude));
-                            path.add(hm);
-                        }
-                    }
-                    routes.add(path);
-                }
-            }
-            routeInfo.setRoutes(routes);
-            jLegs = (jRoutes.getJSONObject(0)).getJSONArray("legs");
-            routeInfo.setDuration(jLegs.getJSONObject(0).getJSONObject("duration").getString("text"));
-            routeInfo.setDistance(jLegs.getJSONObject(0).getJSONObject("distance").getString("text"));
-
+            routeInfo = parseRoutes(jsonString);
 
         } catch (IOException e) {
             Log.i(TAG, "Fail to download routes", e);
         } catch (JSONException e) {
             Log.i(TAG, "Fail to parse routes", e);
         }
+        return routeInfo;
+    }
+
+    private RouteInfo parseRoutes(String jsonString) throws JSONException {
+        JSONArray jRoutes;
+        JSONArray jLegs;
+        JSONArray jSteps;
+        List<List<HashMap<String, String>>> routes = new ArrayList<>();
+        JSONObject root = new JSONObject(jsonString);
+        RouteInfo routeInfo = new RouteInfo();
+
+        jRoutes = root.getJSONArray("routes");
+
+        /** Traversing all routes */
+        for (int i = 0; i < jRoutes.length(); i++) {
+            jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
+            List<HashMap<String, String>> path = new ArrayList<>();
+
+            /** Traversing all legs */
+            for (int j = 0; j < jLegs.length(); j++) {
+                jSteps = ((JSONObject) jLegs.get(j)).getJSONArray("steps");
+
+                /** Traversing all steps */
+                for (int k = 0; k < jSteps.length(); k++) {
+                    String polyline = "";
+                    polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(k)).get("polyline")).get("points");
+                    List<LatLng> list = decodePoly(polyline);
+
+                    /** Traversing all points */
+                    for (int l = 0; l < list.size(); l++) {
+                        HashMap<String, String> hm = new HashMap<>();
+                        hm.put("lat", Double.toString((list.get(l)).latitude));
+                        hm.put("lng", Double.toString((list.get(l)).longitude));
+                        path.add(hm);
+                    }
+                }
+                routes.add(path);
+            }
+        }
+        routeInfo.setRoutes(routes);
+        jLegs = (jRoutes.getJSONObject(0)).getJSONArray("legs");
+        routeInfo.setDuration(jLegs.getJSONObject(0).getJSONObject("duration").getString("text"));
+        routeInfo.setDistance(jLegs.getJSONObject(0).getJSONObject("distance").getString("text"));
         return routeInfo;
     }
 

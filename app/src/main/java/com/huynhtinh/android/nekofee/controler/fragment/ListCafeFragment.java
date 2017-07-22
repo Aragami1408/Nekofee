@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Cafe;
-import utils.DataFetcher;
+import data.DataFetcher;
 
 /**
  * Created by TINH HUYNH on 5/24/2017.

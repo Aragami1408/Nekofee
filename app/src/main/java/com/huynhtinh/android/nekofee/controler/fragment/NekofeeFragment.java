@@ -27,8 +27,8 @@ import com.google.android.gms.location.LocationServices;
 import com.huynhtinh.android.nekofee.R;
 import com.huynhtinh.android.nekofee.controler.activity.ListCafeActivity;
 
-import utils.ConnectionChecker;
-import utils.SharedPreference;
+import network.ConnectionChecker;
+import preferences.SharedPreference;
 
 /**
  * Created by TINH HUYNH on 5/22/2017.

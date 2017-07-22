@@ -1,4 +1,4 @@
-package utils;
+package network;
 
 import android.content.Context;
 import android.location.LocationManager;

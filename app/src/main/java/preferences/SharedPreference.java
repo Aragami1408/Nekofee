@@ -1,4 +1,4 @@
-package utils;
+package preferences;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
