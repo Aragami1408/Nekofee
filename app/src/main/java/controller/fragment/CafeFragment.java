@@ -1,4 +1,4 @@
-package com.huynhtinh.android.nekofee.controler.fragment;
+package controller.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -27,8 +27,8 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.android.gms.maps.model.LatLng;
 import com.huynhtinh.android.nekofee.R;
-import com.huynhtinh.android.nekofee.controler.activity.MapActivity;
-import com.huynhtinh.android.nekofee.controler.activity.WebActivity;
+import controller.activity.MapActivity;
+import controller.activity.WebActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

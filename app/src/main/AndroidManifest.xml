@@ -22,7 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".controler.activity.NekofeeActivity">
+        <activity android:name="controller.activity.NekofeeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -30,19 +30,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controler.activity.ListCafeActivity"
-            android:parentActivityName=".controler.activity.NekofeeActivity">
+            android:name="controller.activity.ListCafeActivity"
+            android:parentActivityName="controller.activity.NekofeeActivity">
         </activity>
         <activity
-            android:name=".controler.activity.CafeActivity"
-            android:parentActivityName=".controler.activity.ListCafeActivity">
+            android:name="controller.activity.CafeActivity"
+            android:parentActivityName="controller.activity.ListCafeActivity">
         </activity>
-        <activity android:name=".controler.activity.MapActivity"
-            android:parentActivityName=".controler.activity.CafeActivity">
+        <activity android:name="controller.activity.MapActivity"
+            android:parentActivityName="controller.activity.CafeActivity">
 
         </activity>
-        <activity android:name=".controler.activity.WebActivity"
-            android:parentActivityName=".controler.activity.CafeActivity"/>
+        <activity android:name="controller.activity.WebActivity"
+            android:parentActivityName="controller.activity.CafeActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDDMGgdIdbvTZE_2_vOuT8ktqsZ6zt9afU"/>

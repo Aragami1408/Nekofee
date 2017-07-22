@@ -1,4 +1,4 @@
-package com.huynhtinh.android.nekofee.controler.activity;
+package controller.activity;
 
 import android.content.Context;
 import android.content.Intent;

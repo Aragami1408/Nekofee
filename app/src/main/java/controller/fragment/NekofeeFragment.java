@@ -1,4 +1,4 @@
-package com.huynhtinh.android.nekofee.controler.fragment;
+package controller.fragment;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -25,7 +25,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.huynhtinh.android.nekofee.R;
-import com.huynhtinh.android.nekofee.controler.activity.ListCafeActivity;
+import controller.activity.ListCafeActivity;
 
 import network.ConnectionChecker;
 import preferences.SharedPreference;

@@ -1,4 +1,4 @@
-package com.huynhtinh.android.nekofee.controler.activity;
+package controller.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.webkit.WebView;
 
 import com.huynhtinh.android.nekofee.R;
-import com.huynhtinh.android.nekofee.controler.fragment.WebFragment;
+import controller.fragment.WebFragment;
 
 /**
  * Created by TINH HUYNH on 6/3/2017.

@@ -1,4 +1,4 @@
-package com.huynhtinh.android.nekofee.controler.fragment;
+package controller.fragment;
 
 import android.content.Intent;
 import android.net.Uri;

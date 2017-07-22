@@ -1,4 +1,4 @@
-package com.huynhtinh.android.nekofee.controler.fragment;
+package controller.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.huynhtinh.android.nekofee.R;
-import com.huynhtinh.android.nekofee.controler.activity.CafeActivity;
+import controller.activity.CafeActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;

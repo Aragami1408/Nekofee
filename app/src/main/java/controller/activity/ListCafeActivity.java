@@ -1,11 +1,11 @@
-package com.huynhtinh.android.nekofee.controler.activity;
+package controller.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.Fragment;
 
-import com.huynhtinh.android.nekofee.controler.fragment.ListCafeFragment;
+import controller.fragment.ListCafeFragment;
 
 /**
  * Created by TINH HUYNH on 5/24/2017.
