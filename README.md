@@ -7,7 +7,7 @@ Nekofee allows user to find nearby coffee shops within a paricular radius provid
 + Support user contacting café through: phone number or website,..
 + Display route, distance, duration between user's location and café's on two transit modes: Driving and Walking
 
-Demo video: https://www.youtube.com/watch?v=xvOrsP_h3hY
+Demo video: https://www.youtube.com/watch?v=daElHz6Q8MQ
 
 Libraries, APIs used for building app:
 + APIs: 
