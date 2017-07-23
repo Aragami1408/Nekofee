@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import model.RouteInfo;
 import data.DataFetcher;
+import model.RouteInfo;
 
 /**
  * Created by TINH HUYNH on 6/1/2017.
@@ -82,6 +82,7 @@ public class MapActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mCurrentLatLng = intent.getParcelableExtra(EXTRA_CURRENT_LATLNG);
         mCafeLatLng = intent.getParcelableExtra(EXTRA_CAFE_LATLNG);
+
         SupportMapFragment supportMapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
@@ -193,13 +194,14 @@ public class MapActivity extends AppCompatActivity {
                     points.add(position);
                 }
 
-
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(10);
                 lineOptions.color(Color.BLUE);
 
-                // Drawing polyline in the Google Map for the i-th route
+            }
+            // Drawing polyline in the Google Map for the i-th route
+            if (lineOptions != null) {
                 mMap.addPolyline(lineOptions);
             }
             mDistanceButton.setText(result.getDistance());

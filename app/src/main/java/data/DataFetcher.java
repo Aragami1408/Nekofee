@@ -258,7 +258,6 @@ public class DataFetcher {
         try {
             String jsonString = getUrlString(uri.toString());
             routeInfo = parseRoutes(jsonString);
-
         } catch (IOException e) {
             Log.i(TAG, "Fail to download routes", e);
         } catch (JSONException e) {
